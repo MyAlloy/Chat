@@ -64,10 +64,10 @@ public enum AvailableInputType: Sendable {
 }
 
 public struct InputViewAttachments {
-    var medias: [Media] = []
-    var recording: Recording?
-    var giphyMedia: GPHMedia?
-    var replyMessage: ReplyMessage?
+    public var medias: [Media] = []
+    public var recording: Recording?
+    public var giphyMedia: GPHMedia?
+    public var replyMessage: ReplyMessage?
 }
 
 struct InputView: View {
