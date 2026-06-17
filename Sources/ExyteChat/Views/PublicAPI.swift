@@ -348,3 +348,15 @@ public extension ChatView {
         return view
     }
 }
+
+public extension ChatView {
+    // MARK: Patched customizations
+    
+    /// Subtracts `safeAreaInsets.top` from `tableView.contentInset.top`.
+    /// See `ChatCustomizationParameters.cancelTopSafeAreaInset`.
+    func cancelTopSafeAreaInset(_ cancel: Bool = true) -> ChatView {
+        var view = self
+        view.chatCustomizationParameters.cancelTopSafeAreaInset = cancel
+        return view
+    }
+}

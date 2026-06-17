@@ -30,6 +30,16 @@ struct ChatCustomizationParameters {
     var localization = ChatLocalization.defaultLocalization // these can be localized in the Localizable.strings files
     var reactionDelegate: ReactionDelegate?
     var listSwipeActions = ListSwipeActions()
+    
+    // MARK: Patched customizations
+
+    /// When `true`, the chat list compensates for UIKit's automatic top
+    /// safe-area content inset by applying an equal-and-opposite offset to
+    /// `tableView.contentInset.top`. When a host extends the list
+    /// under the system bar via `.ignoresSafeArea(.top)`, the auto-
+    /// applied top safe-area inset surfaces at the visual bottom (due to the
+    /// 180° rotation) and opens a gap above whatever sits below the list.
+    var cancelTopSafeAreaInset: Bool = false
 }
 
 public struct ScrollToParams: Equatable {

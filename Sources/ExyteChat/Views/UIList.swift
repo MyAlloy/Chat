@@ -48,7 +48,9 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
 
     func makeUIView(context: Context) -> UITableView {
         let style = mainHeaderBuilder != nil || chatParams.showDateHeaders ? UITableView.Style.grouped : .plain
-        let tableView = UITableView(frame: .zero, style: style)
+        let tableView: UITableView = chatParams.cancelTopSafeAreaInset
+            ? SafeAreaCancellingTableView(frame: .zero, style: style)
+            : UITableView(frame: .zero, style: style)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.dataSource = context.coordinator
@@ -82,7 +84,11 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
             }
         }
 
-        if tableView.contentInset != chatParams.contentInsets {
+        if let cancellingTable = tableView as? SafeAreaCancellingTableView {
+            if cancellingTable.requestedInset != chatParams.contentInsets {
+                cancellingTable.requestedInset = chatParams.contentInsets
+            }
+        } else if tableView.contentInset != chatParams.contentInsets {
             tableView.contentInset = chatParams.contentInsets
         }
 
@@ -770,5 +776,31 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
         }
         res += String("}")
         return res
+    }
+}
+
+// MARK: - Patched: top safe-area cancellation
+
+/// `UITableView` subclass that subtracts `safeAreaInsets.top` from `contentInset.top`.
+/// Combined with the default `.automatic` `contentInsetAdjustmentBehavior`, \
+/// the resulting `adjustedContentInset.top`collapses to zero.
+final class SafeAreaCancellingTableView: UITableView {
+    /// The inset the host (UIList) wants applied. Composed with
+    /// `safeAreaInsets.top` to produce the actual `contentInset`.
+    var requestedInset: UIEdgeInsets = .zero {
+        didSet { recomposeContentInset() }
+    }
+
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        recomposeContentInset()
+    }
+
+    private func recomposeContentInset() {
+        var result = requestedInset
+        result.top -= safeAreaInsets.top
+        if contentInset != result {
+            contentInset = result
+        }
     }
 }
