@@ -352,23 +352,11 @@ public extension ChatView {
 public extension ChatView {
     // MARK: Patched customizations
     
-    /// Cancel the top safe-area component of the chat list's
-    /// `adjustedContentInset` by subtracting `safeAreaInsets.top` from
-    /// `tableView.contentInset.top`. Useful when a host extends the chat
-    /// under a system bar via `.ignoresSafeArea(.top)` and the rotated
-    /// `.conversation` mode is opening a gap at the visual bottom.
+    /// Subtracts `safeAreaInsets.top` from `tableView.contentInset.top`.
     /// See `ChatCustomizationParameters.cancelTopSafeAreaInset`.
     func cancelTopSafeAreaInset(_ cancel: Bool = true) -> ChatView {
         var view = self
         view.chatCustomizationParameters.cancelTopSafeAreaInset = cancel
-        return view
-    }
-
-    /// Hide the iOS 26 `UIScrollEdgeEffect` fades at both ends of the chat list.
-    /// See `ChatCustomizationParameters.disableScrollEdgeEffects`
-    func disableScrollEdgeEffects(_ disabled: Bool = true) -> ChatView {
-        var view = self
-        view.chatCustomizationParameters.disableScrollEdgeEffects = disabled
         return view
     }
 }

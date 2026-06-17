@@ -57,6 +57,7 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
         tableView.delegate = context.coordinator
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.transform = CGAffineTransform(rotationAngle: (type == .conversation ? .pi : 0))
+
         tableView.showsVerticalScrollIndicator = false
         tableView.estimatedSectionHeaderHeight = 1
         tableView.estimatedSectionFooterHeight = UITableView.automaticDimension
@@ -69,14 +70,7 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
         tableView.sectionFooterHeight = 0
         tableView.tableHeaderView = nil
         tableView.tableFooterView = UIView(frame: .zero)
-        tableView.backgroundColor = .red.withAlphaComponent(0.4)
-        // Patched customizations
-        if chatParams.disableScrollEdgeEffects, #available(iOS 26.0, *) {
-            tableView.topEdgeEffect.isHidden = true
-            tableView.bottomEdgeEffect.isHidden = true
-        }
 
-        
         transaction.updateQueue = updateQueue
         chatParams.onTransactionReady?(transaction)
 
@@ -156,13 +150,6 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
                 tableView.endUpdates()
                 tableView.relayoutHeadersFooters()
             }
-        }
-        
-        DispatchQueue.main.async {
-            print("**** frame:", tableView.frame)
-            print("**** safeAreaInsets:", tableView.safeAreaInsets)
-            print("**** contentInset:", tableView.contentInset)
-            print("**** adjustedContentInset:", tableView.adjustedContentInset)
         }
     }
 
@@ -794,14 +781,9 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
 
 // MARK: - Patched: top safe-area cancellation
 
-/// `UITableView` subclass that subtracts `safeAreaInsets.top` from
-/// `contentInset.top`. Combined with the default `.automatic`
-/// `contentInsetAdjustmentBehavior`, the resulting `adjustedContentInset.top`
-/// collapses to zero — so the auto-applied top safe-area inset no longer
-/// surfaces as a gap at the visual bottom in `.conversation` mode (where
-/// the table is rotated 180°). The host's requested inset is preserved
-/// via `requestedInset`; `contentInset` reflects `requestedInset` with
-/// the safe-area top subtracted.
+/// `UITableView` subclass that subtracts `safeAreaInsets.top` from `contentInset.top`.
+/// Combined with the default `.automatic` `contentInsetAdjustmentBehavior`, \
+/// the resulting `adjustedContentInset.top`collapses to zero.
 final class SafeAreaCancellingTableView: UITableView {
     /// The inset the host (UIList) wants applied. Composed with
     /// `safeAreaInsets.top` to produce the actual `contentInset`.
