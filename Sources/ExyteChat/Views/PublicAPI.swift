@@ -352,11 +352,15 @@ public extension ChatView {
 public extension ChatView {
     // MARK: Patched customizations
     
-    /// Disable UIKit's automatic safe-area inset adjustment on the chat list's scroll view.
-    /// See `ChatCustomizationParameters.disableContentInsetAdjustment`
-    func disableContentInsetAdjustment(_ disabled: Bool = true) -> ChatView {
+    /// Cancel the top safe-area component of the chat list's
+    /// `adjustedContentInset` by subtracting `safeAreaInsets.top` from
+    /// `tableView.contentInset.top`. Useful when a host extends the chat
+    /// under a system bar via `.ignoresSafeArea(.top)` and the rotated
+    /// `.conversation` mode is opening a gap at the visual bottom.
+    /// See `ChatCustomizationParameters.cancelTopSafeAreaInset`.
+    func cancelTopSafeAreaInset(_ cancel: Bool = true) -> ChatView {
         var view = self
-        view.chatCustomizationParameters.disableContentInsetAdjustment = disabled
+        view.chatCustomizationParameters.cancelTopSafeAreaInset = cancel
         return view
     }
 
