@@ -75,7 +75,7 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
         }
 
         if chatParams.disableContentInsetAdjustment {
-            tableView.contentInsetAdjustmentBehavior = .scrollableAxes
+            tableView.insetsContentViewsToSafeArea = false
         }
         
         transaction.updateQueue = updateQueue
