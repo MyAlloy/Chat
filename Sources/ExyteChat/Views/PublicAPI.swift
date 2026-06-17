@@ -348,3 +348,23 @@ public extension ChatView {
         return view
     }
 }
+
+public extension ChatView {
+    // MARK: Patched customizations
+    
+    /// Disable UIKit's automatic safe-area inset adjustment on the chat list's scroll view.
+    /// See `ChatCustomizationParameters.disableContentInsetAdjustment`
+    func disableContentInsetAdjustment(_ disabled: Bool = true) -> ChatView {
+        var view = self
+        view.chatCustomizationParameters.disableContentInsetAdjustment = disabled
+        return view
+    }
+
+    /// Hide the iOS 26 `UIScrollEdgeEffect` fades at both ends of the chat list.
+    /// See `ChatCustomizationParameters.disableScrollEdgeEffects`
+    func disableScrollEdgeEffects(_ disabled: Bool = true) -> ChatView {
+        var view = self
+        view.chatCustomizationParameters.disableScrollEdgeEffects = disabled
+        return view
+    }
+}

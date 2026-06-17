@@ -30,6 +30,21 @@ struct ChatCustomizationParameters {
     var localization = ChatLocalization.defaultLocalization // these can be localized in the Localizable.strings files
     var reactionDelegate: ReactionDelegate?
     var listSwipeActions = ListSwipeActions()
+    
+    // MARK: Patched customizations
+    
+    /// When `true`, the chat list disables UIKit's automatic safe-area inset
+    /// adjustment on its scroll view. When a host extends the chat under a
+    /// translucent navigation bar via `.ignoresSafeArea(.top)`, the
+    /// auto-applied top safe-area inset (due to the 180° rotation) opens a gap
+    /// above whatever sits below the list.
+    var disableContentInsetAdjustment: Bool = false
+    
+    /// When `true`, the chat list hides the iOS 26 `UIScrollEdgeEffect`
+    /// fades at both ends of the table. Pair with `.ignoresSafeArea(.top)`
+    /// and `.toolbarBackgroundVisibility(.hidden, ...)` to let messages
+    /// scroll cleanly under a transparent Liquid Glass nav bar.
+    var disableScrollEdgeEffects: Bool = false
 }
 
 public struct ScrollToParams: Equatable {
