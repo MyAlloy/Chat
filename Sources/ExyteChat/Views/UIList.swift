@@ -67,7 +67,7 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
         tableView.sectionFooterHeight = 0
         tableView.tableHeaderView = nil
         tableView.tableFooterView = UIView(frame: .zero)
-
+        tableView.backgroundColor = .red.withAlphaComponent(0.4)
         // Patched customizations
         if chatParams.disableScrollEdgeEffects, #available(iOS 26.0, *) {
             tableView.topEdgeEffect.isHidden = true
@@ -153,6 +153,13 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
                 tableView.endUpdates()
                 tableView.relayoutHeadersFooters()
             }
+        }
+        
+        DispatchQueue.main.async {
+            print("**** frame:", tableView.frame)
+            print("**** safeAreaInsets:", tableView.safeAreaInsets)
+            print("**** contentInset:", tableView.contentInset)
+            print("**** adjustedContentInset:", tableView.adjustedContentInset)
         }
     }
 
