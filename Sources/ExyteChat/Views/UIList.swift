@@ -56,6 +56,15 @@ struct UIList<MessageContent: View>: UIViewRepresentable {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.transform = CGAffineTransform(rotationAngle: (type == .conversation ? .pi : 0))
 
+        // iOS 26: suppress the automatic scroll edge effect on both ends so a
+        // host view can place the table behind a translucent navigation bar
+        // without the table painting its own fade. Both ends are needed
+        // because the table is rotated 180° in conversation mode.
+        if #available(iOS 26.0, *) {
+            tableView.topEdgeEffect.isHidden = true
+            tableView.bottomEdgeEffect.isHidden = true
+        }
+        
         tableView.showsVerticalScrollIndicator = false
         tableView.estimatedSectionHeaderHeight = 1
         tableView.estimatedSectionFooterHeight = UITableView.automaticDimension
